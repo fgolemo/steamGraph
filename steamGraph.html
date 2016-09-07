@@ -50,6 +50,8 @@
             </div>
             <br>
             <span id="progress"></span>
+            <br>
+            <button onclick="showTutorial()" class="btn btn-default">tutorial</button>
         </div>
         <div class="col-xs-3" class="center-block">
             <h3>
@@ -86,6 +88,50 @@
         </div>
     </div>
 </div>
+
+<div class="modal fade" tabindex="-1" role="dialog" id="tutorial">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                        aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title">Welcome to the SteamGraph!</h4>
+            </div>
+            <div class="modal-body">
+                <p>
+                    <strong>Short Version:</strong>
+                </p>
+                <ul>
+                    <li>Zoom and move like in Google Maps</li>
+                    <li>Click on a game (white circle) to rate it (if you played it)</li>
+                    <li>Rate a game <strong class="text-success">+1 or +2</strong>, all similar games are <strong class="text-success">upvoted and get greener</strong></li>
+                    <li>Rate a game <strong class="text-danger">-1 or -2</strong>, all similar games are <strong class="text-danger">downvoted and get more red</strong></li>
+                    <li>Rate a game with <strong>0</strong>, to just <strong>mark it as played</strong>, but don't care about rating</li>
+                    <li>Click "calculate" (bottom right) to get your personal Top 10</li>
+                    <li>Before closing the browser tab, <strong>click "save"</strong>.</li>
+                </ul>
+
+                <p>
+                    <strong>Longer Version:</strong>
+                    Heya, this is the tool for you if you have too many games on Steam and don't know what to play next.
+                    The graph shows the current 5000 most-actively played games and their similar games. Each game is a node (white circle)
+                    and each edge (greyish line) represents a similarity. Those are taken from the Steam store's list of similar titles for each game.
+                    <br>
+                    Once you pick out games you played and rate them, the whole graph is adjusted - all similar games get a higher/lower score.
+                    At the end, when you rated most of the games you tried, the ones most likely to suit your taste
+                    will appear bigger and greener, and ones less likely will be smaller and more red.
+                    But you can also get the current top10 at any point in time by clicking the "calculate" button in the bottom right.
+                    <br>
+                    Also sorry, drawing and recalculating the graph needs lots of resources.
+                    Therefore if you rate games with lots of similar titles, it takes longer to update everything.
+                </p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" data-dismiss="modal">Cool</button>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
 
 <script src="js/steamGraph.js"></script>
 </body>

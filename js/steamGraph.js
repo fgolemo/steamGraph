@@ -62,7 +62,15 @@ function gettop10() {
                 return -1;
             } else if (a.value < b.value) {
                 return 1;
-            } else return 0;
+            } else {
+                if (a.rating > b.rating) {
+                    return -1;
+                } else if (a.rating < b.rating) {
+                    return 1;
+                } else {
+                    return 0;
+                }
+            }
         },
         filter: function (item) {
             return (item.rated === false);
@@ -123,7 +131,14 @@ function rateGame(ratingTmp) {
     $('#loadingModal').modal({keyboard: false});
 }
 
+function showTutorial() {
+    $('#tutorial').modal();
+}
+
 $('#loadingModal').on('shown.bs.modal', function (e) {
+    var nodesClone = nodes.get();
+    var edgesClone = edges.get();
+
     var newRating = node.value + rating;
     $("#currentRating").text(newRating);
     if (newRating < currentMin) {

@@ -10,7 +10,7 @@ steamGraph TODO
 # add steam ratings to top10
 - add other 10k games to graph
 - ask user if he wants to load 5k or 15k graph
-- add tutorial modal overlay
+# add tutorial modal overlay
 - profile the app and find speed culprit
 - put app online
 
