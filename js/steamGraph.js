@@ -135,9 +135,26 @@ function showTutorial() {
     $('#tutorial').modal();
 }
 
+function updateNodes(nodesClone, id, newStuff) {
+    var nodesClean = nodesClone.filter(function (el) {
+        return el.id !== id;
+    });
+
+    var element = nodesClone.filter(function (el) {
+        return el.id === id;
+    })[0];
+
+    var newElement = $.extend(true, element, newStuff);
+
+    nodesClean.push(newElement);
+
+    return nodesClean;
+}
+
 $('#loadingModal').on('shown.bs.modal', function (e) {
     var nodesClone = nodes.get();
-    var edgesClone = edges.get();
+    var scale = network.getScale();
+    var viewPos = network.getViewPosition();
 
     var newRating = node.value + rating;
     $("#currentRating").text(newRating);
@@ -148,7 +165,11 @@ $('#loadingModal').on('shown.bs.modal', function (e) {
         currentMax = newRating;
     }
     var newColor = {background: 'black', border: 'blue'}; // in order to mark them as done
-    nodes.update([{id: node.id, value: newRating, color: newColor, rated: true}]);
+
+    // I'm using the following function instead of nodes.update, because if I do nodes.update(), it redraws the net
+    // and I don't want that right away. I only wanna redraw after I updated all the related nodes
+    nodesClone = updateNodes(nodesClone, node.id, {value: newRating, color: newColor, rated: true});
+    // nodes.update([{id: node.id, value: newRating, color: newColor, rated: true}]);
 
     for (var e in currentEdges) {
         var edge = edges.get(currentEdges[e]);
@@ -169,14 +190,22 @@ $('#loadingModal').on('shown.bs.modal', function (e) {
         }
 
         if (otherNode.rated) {
-            nodes.update([{id: otherNode.id, value: otherRating}]);
+            nodesClone = updateNodes(nodesClone, otherNode.id, {value: otherRating});
+            // nodes.update([{id: otherNode.id, value: otherRating}]);
         } else {
             var newColor = {background: ratingToHex(otherRating), border: 'black'};
-            nodes.update([{id: otherNode.id, value: otherRating, color: newColor}]);
+            nodesClone = updateNodes(nodesClone, otherNode.id, {value: otherRating, color: newColor});
+            // nodes.update([{id: otherNode.id, value: otherRating, color: newColor}]);
         }
 
     }
-//        console.log("---");
+    nodes = new vis.DataSet(nodesClone);
+    network.setData({nodes: nodes, edges: edges});
+    network.moveTo({
+        position: viewPos,
+        scale: scale,
+        animation: false
+    }); // because the network zooms out on data update
     $('#loadingModal').modal('hide');
 });
 
