@@ -73,7 +73,9 @@ function gettop10() {
     $('#top10 > tbody').empty();
 
     for (var i in topNodes) {
-        $('#top10 > tbody:last-child').append('<tr><td>' + topNodes[i].label + '</td><td>' + topNodes[i].value + '</td></tr>');
+        $('#top10 > tbody:last-child').append(
+            '<tr><td>' + topNodes[i].label + '</td><td>' + topNodes[i].value + '</td><td>' + topNodes[i].rating + '/10</td></tr>'
+        );
     }
 
 }
