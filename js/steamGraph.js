@@ -13,6 +13,8 @@ var storage = window['localStorage'];
 
 $("#nodeInfos").hide();
 
+$('#loadingModal').modal();
+
 function bla() {
 //        for (var i = 1; i < 6; i++) {
 //            var newVal = Math.floor(Math.random() * 10);
@@ -128,7 +130,7 @@ var rating = 0;
 
 function rateGame(ratingTmp) {
     rating = ratingTmp;
-    $('#loadingModal').modal({keyboard: false});
+    $('#updatingModal').modal({keyboard: false});
 }
 
 function showTutorial() {
@@ -151,7 +153,7 @@ function updateNodes(nodesClone, id, newStuff) {
     return nodesClean;
 }
 
-$('#loadingModal').on('shown.bs.modal', function (e) {
+$('#updatingModal').on('shown.bs.modal', function (e) {
     var nodesClone = nodes.get();
     var scale = network.getScale();
     var viewPos = network.getViewPosition();
@@ -206,7 +208,7 @@ $('#loadingModal').on('shown.bs.modal', function (e) {
         scale: scale,
         animation: false
     }); // because the network zooms out on data update
-    $('#loadingModal').modal('hide');
+    $('#updatingModal').modal('hide');
 });
 
 
@@ -228,6 +230,9 @@ function initNetwork() {
         edges: edges
     };
     network = new vis.Network(container, data, options);
+    network.on('afterDrawing', function() {
+        $('#loadingModal').modal('hide');
+    });
     network.on("selectNode", function (params) {
         var selNode = params.nodes[0];
         var selEdges = params.edges;
