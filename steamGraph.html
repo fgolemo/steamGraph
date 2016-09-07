@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Network | HTML in nodex</title>
+
+    <style type="text/css">
+        body {
+            font: 10pt arial;
+        }
+
+        #mynetwork {
+            /*width: 900px;*/
+            height: 600px;
+            border: 1px solid lightgray;
+            background-color: #eeeeee;
+        }
+
+        .glyphicon.spinning {
+            animation: spin 1s infinite linear;
+            -webkit-animation: spin2 1s infinite linear;
+        }
+
+        @keyframes spin {
+            from {
+                transform: scale(1) rotate(0deg);
+            }
+            to {
+                transform: scale(1) rotate(360deg);
+            }
+        }
+
+        @-webkit-keyframes spin2 {
+            from {
+                -webkit-transform: rotate(0deg);
+            }
+            to {
+                -webkit-transform: rotate(360deg);
+            }
+        }
+
+    </style>
+
+    <link rel="stylesheet" href="css/bootstrap.min.css">
+
+    <script type="text/javascript" src="js/vis.js"></script>
+    <script src="js/jquery-3.1.0.js"></script>
+    <script src="js/bootstrap.min.js"></script>
+    <script src="js/moment.js"></script>
+    <link href="js/vis.css" rel="stylesheet" type="text/css"/>
+</head>
+
+<body>
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-xs-12">
+            <div id="mynetwork"></div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-xs-6">
+            <div id="nodeInfos" class="center-block">
+                <h3><a href="#" target="_blank">gamenam</a></h3>
+                <img src="data/img/10.jpg"/><br>
+                <span>Steam overall rating: <span id="steamrating">0</span>/10</span><br>
+                <span>Graph rating: <span id="currentRating">0</span></span>
+                <div id="rating">
+                    <button onclick="rateGame(-2)" class="btn btn-danger">-2</button>
+                    <button onclick="rateGame(-1)" class="btn btn-danger">-1</button>
+                    <button onclick="rateGame(0)" class="btn btn-default">0</button>
+                    <button onclick="rateGame(+1)" class="btn btn-success">+1</button>
+                    <button onclick="rateGame(+2)" class="btn btn-success">+2</button>
+                </div>
+            </div>
+        </div>
+        <div class="col-xs-6" class="center-block">
+            <h3>
+                save/load
+            </h3>
+            <div id="saveload">
+                <button onclick="saveGraph()" class="btn btn-primary">save</button>
+                <button onclick="loadGraph()" class="btn btn-primary">load</button>
+            </div>
+            <br>
+            <span id="progress"></span>
+        </div>
+    </div>
+
+</div>
+
+<div class="modal fade" tabindex="-1" role="dialog" id="loadingModal">
+    <div class="modal-dialog modal-sm" role="document">
+        <div class="modal-content">
+            &nbsp;<span class='glyphicon glyphicon-refresh spinning'></span> updating graph, please stand by...
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+
+    var DIR = '../img/refresh-cl/';
+    var EDGE_LENGTH_MAIN = 150;
+    var EDGE_LENGTH_SUB = 50;
+
+    var currentNode = -1;
+    var currentEdges = [];
+    var node;
+
+    var currentMax = 0;
+    var currentMin = 0;
+
+    var storage = window['localStorage'];
+
+    $("#nodeInfos").hide();
+
+    function bla() {
+//        for (var i = 1; i < 6; i++) {
+//            var newVal = Math.floor(Math.random() * 10);
+//            nodes.update([{id: i, value: newVal}]);
+//        }
+//        edges.update([{id: '1-2', value: -1}]);
+        nodes.update([{id: 298110, value: 10}]);
+    }
+
+    function loadGameData() {
+        $("#nodeInfos h3 a").text(node.label);
+        $("#nodeInfos h3 a").attr('href', node.link);
+        $("#steamrating").text(node.rating);
+        $("#nodeInfos img").attr("src", "data/img/" + node.id + ".jpg");
+        $("#currentRating").text(node.value);
+    }
+
+    function saveGraph() {
+        $("#progress").text("saving...");
+        storage.setItem('nodes', JSON.stringify(nodes.get()));
+        storage.setItem('edges', JSON.stringify(edges.get()));
+        $("#progress").text("saved. " + moment().calendar());
+    }
+
+    function loadGraph() {
+        $("#progress").text("loading...");
+        var nodesTmp = JSON.parse(storage.getItem('nodes'));
+        var edgesTmp = JSON.parse(storage.getItem('edges'));
+
+        nodes = new vis.DataSet(nodesTmp);
+        edges = new vis.DataSet(edgesTmp);
+        network.setData({nodes: nodes, edges: edges});
+
+        $("#progress").text("loaded. " + moment().calendar());
+    }
+
+    function hexFromRGBPercent(r, g, b) {
+        var hex = [
+            Math.floor((100 - r) / 100 * 255).toString(16),
+            Math.floor((100 - g) / 100 * 255).toString(16),
+            Math.floor((100 - b) / 100 * 255).toString(16)
+        ];
+        $.each(hex, function (nr, val) {
+            if (val.length === 1) {
+                hex[nr] = "0" + val;
+            }
+        });
+        return "#" + hex.join("").toUpperCase();
+    }
+
+    function ratingToHex(rating) {
+        if (rating == "b") {
+            return "#000000";
+        }
+
+        var red = 0;
+        var green = 0;
+        var blue = 0;
+        if (rating < 0) {
+            green = rating / currentMin * 100;
+            blue = rating / currentMin * 100;
+        } else if (rating > 0) {
+            red = rating / currentMax * 100;
+            blue = rating / currentMax * 100;
+        } else {
+            red = 50;
+            green = 50;
+            blue = 50;
+        }
+        return hexFromRGBPercent(red, green, blue);
+    }
+
+    var rating = 0;
+
+    function rateGame(ratingTmp) {
+        rating = ratingTmp;
+        $('#loadingModal').modal({keyboard: false});
+    }
+
+    $('#loadingModal').on('shown.bs.modal', function (e) {
+        var newRating = node.value + rating;
+        console.log(newRating);
+        $("#currentRating").text(newRating);
+        if (newRating < currentMin) {
+            currentMin = newRating;
+        }
+        if (newRating > currentMax) {
+            currentMax = newRating;
+        }
+        var newColor = {background: 'black', border: 'blue'}; // in order to mark them as done
+        nodes.update([{id: node.id, value: newRating, color: newColor, rated: true}]);
+
+        for (var e in currentEdges) {
+            var edge = edges.get(currentEdges[e]);
+            var otherNode;
+            if (edge.from == node.id) {
+                otherNode = nodes.get(edge.to);
+            } else {
+                otherNode = nodes.get(edge.from);
+            }
+
+            var otherRating = otherNode.value + rating;
+//            console.log("rating: " + rating + ", old val:" + otherNode.value + ", new val:" + newRating);
+            if (otherRating < currentMin) {
+                currentMin = otherRating;
+            }
+            if (otherRating > currentMax) {
+                currentMax = otherRating;
+            }
+
+            if (otherNode.rated) {
+                nodes.update([{id: otherNode.id, value: otherRating}]);
+            } else {
+                var newColor = {background: ratingToHex(otherRating), border: 'black'};
+                nodes.update([{id: otherNode.id, value: otherRating, color: newColor}]);
+            }
+
+        }
+//        console.log("---");
+        $('#loadingModal').modal('hide');
+    });
+
+
+    var container = document.getElementById('mynetwork');
+    var options = {
+        nodes: {
+            shape: 'dot'
+        },
+        physics: false,
+        interaction: {
+            hover: true,
+            dragNodes: false
+        }
+    };
+
+    function initNetwork() {
+        var data = {
+            nodes: nodes,
+            edges: edges
+        };
+        network = new vis.Network(container, data, options);
+        network.on("selectNode", function (params) {
+            var selNode = params.nodes[0];
+            var selEdges = params.edges;
+            currentNode = selNode;
+            currentEdges = selEdges;
+            node = nodes.get(currentNode);
+            loadGameData();
+            $("#nodeInfos").show();
+
+//            console.log(selNode);
+//            console.log(selEdges);
+        });
+    }
+
+    $.getJSON("data/steamNetWithPos.json", function (json) {
+        var nodesArray = json.nodes;
+        var edgesArray = json.edges;
+        for (var i in edgesArray) {
+            edgesArray[i]["color"] = {color: '#555555', opacity: 0.3, highlight: '#ff0000'}
+        }
+        for (var i in nodesArray) {
+            nodesArray[i]["color"] = {background: 'white', border: 'black'};
+            nodesArray[i]['font'] = {size: 15, background: 'white', strokeWidth: 3};
+            nodesArray[i]['rated'] = false;
+        }
+//        console.log(nodesArray[0]);
+//        console.log(edgesArray[0]);
+        nodes = new vis.DataSet(nodesArray);
+        edges = new vis.DataSet(edgesArray);
+        initNetwork();
+
+    });
+
+</script>
+</body>
+</html>

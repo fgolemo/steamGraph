@@ -1,0 +1,18 @@
+steamGraph TODO
+
+# !!! add save/load feature
+# add game link (store)
+- add app to github
+# display steam store rating in info box
+- add current top 10 (load via button click)
+# add loading animation for when network is being updated
+# move info/voting box to the right
+- add other 10k games to graph
+- display steam store rating in info box
+- add tutorial modal overlay
+- profile the app and find speed culprit
+- put app online
+
+Bonus:
+- get game tags and display in info box
+- search bar 
