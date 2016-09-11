@@ -3,7 +3,7 @@ from tqdm import tqdm
 
 nodes = []
 
-with open('data/steamNet.json') as data_file, open('data/steamNetPositions.gdf') as positions_file:
+with open('data/steamNet1k.json') as data_file, open('data/steamNetPositions1k.gdf') as positions_file:
     data = json.load(data_file)
 
     firstLine = True
@@ -26,5 +26,5 @@ with open('data/steamNet.json') as data_file, open('data/steamNetPositions.gdf')
                 nodes.append(node)
                 break
 
-with open('data/steamNetWithPos.json', 'w') as f:
+with open('data/steamNetWithPos1k.json', 'w') as f:
      json.dump({'nodes': nodes, 'edges': data['edges']}, f)
