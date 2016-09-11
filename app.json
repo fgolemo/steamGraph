@@ -1,0 +1,6 @@
+{
+  "name": "SteamGraph",
+  "description": "If you don't know what to play next, check out SteamGraph.",
+  "repository": "https://github.com/fgolemo/steamGraph",
+  "keywords": ["steam", "graph"]
+}
