@@ -10,6 +10,8 @@
     <script src="js/bootstrap.min.js"></script>
     <script src="js/moment.js"></script>
     <link href="js/vis.css" rel="stylesheet" type="text/css"/>
+    <link rel="stylesheet" href="css/awesomplete.css" />
+    <script src="js/awesomplete.js"></script>
     <link rel="stylesheet" href="css/steamGraph.css">
 </head>
 
@@ -22,7 +24,7 @@
     </div>
 
     <div class="row">
-        <div class="col-xs-6">
+        <div class="col-xs-3">
             <div id="nodeInfosPreview">
                 <h4>please click on a node in the network to get started</h4>
             </div>
@@ -30,7 +32,12 @@
                 <h3><a href="#" target="_blank">gamenam</a></h3>
                 <img src="data/img/10.jpg"/><br>
                 <span>Steam overall rating: <span id="steamrating">0</span>/10</span><br>
-                <span>Graph rating: <span id="currentRating">0</span></span>
+                <span>
+                    Graph rating:
+                    <span id="currentRating">0</span>
+                    <span id="isRated" class="label label-info">rated</span>
+                </span><br>
+                <span>Tags: <span id="tags"></span></span>
                 <div id="rating">
                     <button onclick="rateGame(-2)" class="btn btn-danger">-2</button>
                     <button onclick="rateGame(-1)" class="btn btn-danger">-1</button>
@@ -40,7 +47,18 @@
                 </div>
             </div>
         </div>
-        <div class="col-xs-3" class="center-block">
+        <div class="col-xs-3">
+            <h3>
+                search
+            </h3>
+            <form class="form-inline">
+                <div class="form-group">
+                    <label class="sr-only" for="search">game title</label>
+                    <input type="text" class="form-control" id="search" placeholder="game title">
+                </div>
+            </form>
+        </div>
+        <div class="col-xs-3">
             <h3>
                 save/load
             </h3>

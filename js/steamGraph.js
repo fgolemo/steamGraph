@@ -9,20 +9,13 @@ var node;
 var currentMax = 0;
 var currentMin = 0;
 
+var gameTitles = [];
+
 var storage = window['localStorage'];
 
 $("#nodeInfos").hide();
 
 $('#loadingModal').modal();
-
-function bla() {
-//        for (var i = 1; i < 6; i++) {
-//            var newVal = Math.floor(Math.random() * 10);
-//            nodes.update([{id: i, value: newVal}]);
-//        }
-//        edges.update([{id: '1-2', value: -1}]);
-    nodes.update([{id: 298110, value: 10}]);
-}
 
 function loadGameData() {
     $("#nodeInfos h3 a").text(node.label);
@@ -30,22 +23,32 @@ function loadGameData() {
     $("#steamrating").text(node.rating);
     $("#nodeInfos img").attr("src", "data/img/" + node.id + ".jpg");
     $("#currentRating").text(node.value);
+    if (node.rated) {
+        $("#isRated").show();
+    } else {
+        $("#isRated").hide();
+    }
+    $('#tags').empty();
+    for (var t in node.tags.slice(0, 3))
+        $('#tags:last-child').append(
+            '<span class="label label-default">' + node.tags[t] + '</span>&nbsp;'
+        );
 }
 
 function saveGraph() {
     $("#progress").text("saving...");
     storage.setItem('nodes', JSON.stringify(nodes.get()));
-    storage.setItem('edges', JSON.stringify(edges.get()));
+    // storage.setItem('edges', JSON.stringify(edges.get()));
     $("#progress").text("saved. " + moment().calendar());
 }
 
 function loadGraph() {
     $("#progress").text("loading...");
     var nodesTmp = JSON.parse(storage.getItem('nodes'));
-    var edgesTmp = JSON.parse(storage.getItem('edges'));
+    // var edgesTmp = JSON.parse(storage.getItem('edges'));
 
     nodes = new vis.DataSet(nodesTmp);
-    edges = new vis.DataSet(edgesTmp);
+    // edges = new vis.DataSet(edgesTmp);
     network.setData({nodes: nodes, edges: edges});
 
     $("#progress").text("loaded. " + moment().calendar());
@@ -130,6 +133,7 @@ var rating = 0;
 
 function rateGame(ratingTmp) {
     rating = ratingTmp;
+    $("#isRated").show();
     $('#updatingModal').modal({keyboard: false});
 }
 
@@ -137,24 +141,48 @@ function showTutorial() {
     $('#tutorial').modal();
 }
 
-function updateNodes(nodesClone, id, newStuff) {
-    var nodesClean = nodesClone.filter(function (el) {
-        return el.id !== id;
+function getGameList(nodesArray) {
+    gameTitles = [];
+    for (var i in nodesArray) {
+        gameTitles.push(nodesArray[i].label);
+    }
+    var input = document.getElementById("search");
+    new Awesomplete(input, {
+        list: gameTitles
     });
-
-    var element = nodesClone.filter(function (el) {
-        return el.id === id;
-    })[0];
-
-    var newElement = $.extend(true, element, newStuff);
-
-    nodesClean.push(newElement);
-
-    return nodesClean;
+    Awesomplete.$.bind(input, {
+        "awesomplete-selectcomplete": function (evt) {
+            console.log(evt.text);
+            var selectedNodes = nodes.get({
+                filter: function (item) {
+                    return (item.label == evt.text.value);
+                }
+            });
+            var scale = network.getScale();
+            if (scale < 0.5) {
+                scale = 0.5;
+            }
+            network.setSelection({
+                nodes: [selectedNodes[0].id]
+            }, {
+                unselectAll: true,
+                highlightEdges: true
+            });
+            network.moveTo({
+                position: {x: selectedNodes[0].x, y: selectedNodes[0].y},
+                scale: scale,
+                animation: {
+                    duration: 300
+                }
+            });
+            var selEdges = network.getSelectedEdges();
+            console.log(selEdges);
+            selectNode(selectedNodes[0].id, selEdges);
+        }
+    });
 }
 
 $('#updatingModal').on('shown.bs.modal', function (e) {
-    var nodesClone = nodes.get();
     var scale = network.getScale();
     var viewPos = network.getViewPosition();
 
@@ -168,10 +196,11 @@ $('#updatingModal').on('shown.bs.modal', function (e) {
     }
     var newColor = {background: 'black', border: 'blue'}; // in order to mark them as done
 
+    var updates = [];
+
     // I'm using the following function instead of nodes.update, because if I do nodes.update(), it redraws the net
     // and I don't want that right away. I only wanna redraw after I updated all the related nodes
-    nodesClone = updateNodes(nodesClone, node.id, {value: newRating, color: newColor, rated: true});
-    // nodes.update([{id: node.id, value: newRating, color: newColor, rated: true}]);
+    updates.push({id: node.id, value: newRating, color: newColor, rated: true});
 
     for (var e in currentEdges) {
         var edge = edges.get(currentEdges[e]);
@@ -183,7 +212,6 @@ $('#updatingModal').on('shown.bs.modal', function (e) {
         }
 
         var otherRating = otherNode.value + rating;
-//            console.log("rating: " + rating + ", old val:" + otherNode.value + ", new val:" + newRating);
         if (otherRating < currentMin) {
             currentMin = otherRating;
         }
@@ -192,22 +220,14 @@ $('#updatingModal').on('shown.bs.modal', function (e) {
         }
 
         if (otherNode.rated) {
-            nodesClone = updateNodes(nodesClone, otherNode.id, {value: otherRating});
-            // nodes.update([{id: otherNode.id, value: otherRating}]);
+            updates.push({id: otherNode.id, value: otherRating});
         } else {
             var newColor = {background: ratingToHex(otherRating), border: 'black'};
-            nodesClone = updateNodes(nodesClone, otherNode.id, {value: otherRating, color: newColor});
-            // nodes.update([{id: otherNode.id, value: otherRating, color: newColor}]);
+            updates.push({id: otherNode.id, value: otherRating, color: newColor});
         }
 
     }
-    nodes = new vis.DataSet(nodesClone);
-    network.setData({nodes: nodes, edges: edges});
-    network.moveTo({
-        position: viewPos,
-        scale: scale,
-        animation: false
-    }); // because the network zooms out on data update
+    nodes.update(updates);
     $('#updatingModal').modal('hide');
 });
 
@@ -224,33 +244,33 @@ var options = {
     }
 };
 
+function selectNode(selNode, selEdges) {
+    currentNode = selNode;
+    currentEdges = selEdges;
+    node = nodes.get(currentNode);
+    loadGameData();
+    $("#nodeInfosPreview").hide();
+    $("#nodeInfos").show();
+}
+
 function initNetwork() {
     var data = {
         nodes: nodes,
         edges: edges
     };
     network = new vis.Network(container, data, options);
-    network.on('afterDrawing', function() {
+    network.on('afterDrawing', function () {
         $('#loadingModal').modal('hide');
     });
     network.on("selectNode", function (params) {
-        var selNode = params.nodes[0];
-        var selEdges = params.edges;
-        currentNode = selNode;
-        currentEdges = selEdges;
-        node = nodes.get(currentNode);
-        loadGameData();
-        $("#nodeInfosPreview").hide();
-        $("#nodeInfos").show();
-
-//            console.log(selNode);
-//            console.log(selEdges);
+        selectNode(params.nodes[0], params.edges);
     });
 }
 
-$.getJSON("data/steamNetWithPos.json", function (json) {
+$.getJSON("data/steamNetWithPos3k.json", function (json) {
     var nodesArray = json.nodes;
     var edgesArray = json.edges;
+    console.log("nodes: " + nodesArray.length);
     for (var i in edgesArray) {
         edgesArray[i]["color"] = {color: '#555555', opacity: 0.3, highlight: '#ff0000'}
     }
@@ -264,6 +284,6 @@ $.getJSON("data/steamNetWithPos.json", function (json) {
     nodes = new vis.DataSet(nodesArray);
     edges = new vis.DataSet(edgesArray);
     initNetwork();
-
+    getGameList(nodesArray);
 });
 
