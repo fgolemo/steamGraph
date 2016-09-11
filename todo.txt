@@ -8,14 +8,19 @@ steamGraph TODO
 # add loading animation for when network is being updated
 # move info/voting box to the right
 # add steam ratings to top10
-- add other 10k games to graph
-- ask user if he wants to load 5k or 15k graph
+# add other 10k games to graph
 # add tutorial modal overlay
 # profile the app and find speed culprit
+- add impress
+- add donate link
+# add graph size selector on load
+# create 1k version of graph
 - put app online
 
 Bonus:
-- get game tags and display in info box
-- search bar
+# get game tags and display in info box
+# search bar
 - allow interaction with top10
+	- allow clicking an element to select it in the graph
 - offer edges/nodes for download
+

@@ -141,6 +141,10 @@ function showTutorial() {
     $('#tutorial').modal();
 }
 
+function showCredits() {
+    $('#credits').modal();
+}
+
 function getGameList(nodesArray) {
     gameTitles = [];
     for (var i in nodesArray) {

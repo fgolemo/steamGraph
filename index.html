@@ -10,9 +10,10 @@
     <script src="js/bootstrap.min.js"></script>
     <script src="js/moment.js"></script>
     <link href="js/vis.css" rel="stylesheet" type="text/css"/>
-    <link rel="stylesheet" href="css/awesomplete.css" />
+    <link rel="stylesheet" href="css/awesomplete.css"/>
     <script src="js/awesomplete.js"></script>
     <link rel="stylesheet" href="css/steamGraph.css">
+    <script src="js/spamspan.js"></script>
 </head>
 
 <body>
@@ -69,7 +70,8 @@
             <br>
             <span id="progress"></span>
             <br>
-            <button onclick="showTutorial()" class="btn btn-default">tutorial</button>
+            <button onclick="showTutorial()" class="btn btn-primary">tutorial</button>
+            <button onclick="showCredits()" class="btn btn-primary">credits</button>
         </div>
         <div class="col-xs-3" class="center-block">
             <h3>
@@ -130,9 +132,13 @@
                 <ul>
                     <li>Zoom and move like in Google Maps</li>
                     <li>Click on a game (white circle) to rate it (if you played it)</li>
-                    <li>Rate a game <strong class="text-success">+1 or +2</strong>, all similar games are <strong class="text-success">upvoted and get greener</strong></li>
-                    <li>Rate a game <strong class="text-danger">-1 or -2</strong>, all similar games are <strong class="text-danger">downvoted and get more red</strong></li>
-                    <li>Rate a game with <strong>0</strong>, to just <strong>mark it as played</strong>, but don't care about rating</li>
+                    <li>Rate a game <strong class="text-success">+1 or +2</strong>, all similar games are <strong
+                            class="text-success">upvoted and get greener</strong></li>
+                    <li>Rate a game <strong class="text-danger">-1 or -2</strong>, all similar games are <strong
+                            class="text-danger">downvoted and get more red</strong></li>
+                    <li>Rate a game with <strong>0</strong>, to just <strong>mark it as played</strong>, but don't care
+                        about rating
+                    </li>
                     <li>Click "calculate" (bottom right) to get your personal Top 10</li>
                     <li>Before closing the browser tab, <strong>click "save"</strong>.</li>
                 </ul>
@@ -140,13 +146,17 @@
                 <p>
                     <strong>Longer Version:</strong>
                     Heya, this is the tool for you if you have too many games on Steam and don't know what to play next.
-                    The graph shows the current 5000 most-actively played games and their similar games. Each game is a node (white circle)
-                    and each edge (greyish line) represents a similarity. Those are taken from the Steam store's list of similar titles for each game.
+                    The graph shows the current 5000 most-actively played games and their similar games. Each game is a
+                    node (white circle)
+                    and each edge (greyish line) represents a similarity. Those are taken from the Steam store's list of
+                    similar titles for each game.
                     <br>
-                    Once you pick out games you played and rate them, the whole graph is adjusted - all similar games get a higher/lower score.
+                    Once you pick out games you played and rate them, the whole graph is adjusted - all similar games
+                    get a higher/lower score.
                     At the end, when you rated most of the games you tried, the ones most likely to suit your taste
                     will appear bigger and greener, and ones less likely will be smaller and more red.
-                    But you can also get the current top10 at any point in time by clicking the "calculate" button in the bottom right.
+                    But you can also get the current top10 at any point in time by clicking the "calculate" button in
+                    the bottom right.
                     <br>
                     Also sorry, drawing and recalculating the graph needs lots of resources.
                     Therefore if you rate games with lots of similar titles, it takes longer to update everything.
@@ -168,7 +178,9 @@
             <div class="modal-body">
                 <div class="row">
                     <div class="col-xs-4 col-xs-offset-1">
-                        <button type="button" class="btn btn-success btn-lg btn-block" onclick="selectGraph('1k')">1k graph</button>
+                        <button type="button" class="btn btn-success btn-lg btn-block" onclick="selectGraph('1k')">1k
+                            graph
+                        </button>
                         <br>
                         <ul>
                             <li>1,000 most popular games</li>
@@ -178,7 +190,9 @@
                         </ul>
                     </div>
                     <div class="col-xs-4 col-xs-offset-2">
-                        <button type="button" class="btn btn-warning btn-lg btn-block" onclick="selectGraph('3k')">3k graph</button>
+                        <button type="button" class="btn btn-warning btn-lg btn-block" onclick="selectGraph('3k')">3k
+                            graph
+                        </button>
                         <br>
                         <ul>
                             <li>3,000 most popular games</li>
@@ -191,6 +205,62 @@
                     </div>
 
                 </div>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+
+<div class="modal fade" tabindex="-1" role="dialog" id="credits">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                        aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title">Thx for using SteamGraph!</h4>
+            </div>
+            <div class="modal-body">
+                <p>
+                    This software was made by Florian Golemo.<br>
+                    Visit my <a href="https://github.com/fgolemo" target="_blank" class="btn btn-success btn-sm">
+                    Github repo for this project
+                    </a> or send me a mail:
+                    <span class="spamspan">
+                        <span class="u">fgolemo+stgr</span>
+                        [at]
+                        <span class="d">gmail [dot] com</span>
+                    </span>
+                    <br><br>
+                    If you like this software or would like a new feature, feel free to donate me a coffee or summin:
+                </p>
+                <form action="https://www.paypal.com/cgi-bin/webscr" method="post" target="_top">
+                    <input type="hidden" name="cmd" value="_s-xclick"/>
+                    <input type="hidden" name="hosted_button_id" value="JQY9V7KNG3F2A"/>
+                    <input type="image" src="https://www.paypal.com/en_US/i/btn/btn_donate_LG.gif" border="0"
+                           name="submit" title="PayPal - The safer, easier way to pay online!" alt="Donate"/>
+                    <img alt="" border="0" src="https://www.paypal.com/en_US/i/scr/pixel.gif" width="1" height="1"/>
+                </form>
+                <br>
+                This app was made with and only thanks to:
+                <ul>
+                    <li><a href="http://store.steampowered.com/" target="_blank">Steam</a>, of course, providing all the game data</li>
+                    <li><a href="https://steamdb.info/" target="_blank">SteamDB</a>, who provided the player counts,
+                        based on which the original over 6,000 steam games were filtered into the 1k and 3k graph
+                    </li>
+                    <li><a href="http://visjs.org/" target="_blank">Vis.js</a>, which is the awesome JavaScript library for drawing the giant graph</li>
+                    <li><a href="http://getbootstrap.com/" target="_blank">Bootstrap</a>, for the visual style of buttons, text, table, etc.</li>
+                    <li><a href="https://leaverou.github.io/awesomplete/" target="_blank">awesomplete</a>, for the sweet search box autocomplete</li>
+                    <li><a href="https://jquery.com/" target="_blank">jQuery</a>,
+                        <a href="http://momentjs.com/" target="_blank">moment.js</a>, and
+                        <a href="http://www.spamspan.com/" target="_blank">spamspan</a>,
+                        for JavaScript goodies
+                    </li>
+                    <li><a href="https://scrapy.org/" target="_blank">Scrapy</a>, for scraping the data with Python</li>
+                    <li><a href="https://www.jetbrains.com/pycharm/" target="_blank">PyCharm</a>, for all the help with the coding and formatting.</li>
+
+                </ul>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" data-dismiss="modal">Cheers!</button>
             </div>
         </div><!-- /.modal-content -->
     </div><!-- /.modal-dialog -->
