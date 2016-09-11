@@ -159,6 +159,44 @@
     </div><!-- /.modal-dialog -->
 </div><!-- /.modal -->
 
+<div class="modal fade" tabindex="-1" role="dialog" id="graphSelect">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Please select a graph!</h4>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-xs-4 col-xs-offset-1">
+                        <button type="button" class="btn btn-success btn-lg btn-block" onclick="selectGraph('1k')">1k graph</button>
+                        <br>
+                        <ul>
+                            <li>1,000 most popular games</li>
+                            <li>~10k edges</li>
+                            <li><span class="text-success">runs smoothly on most devices</span></li>
+                            <li><span class="text-danger">many games missing</span></li>
+                        </ul>
+                    </div>
+                    <div class="col-xs-4 col-xs-offset-2">
+                        <button type="button" class="btn btn-warning btn-lg btn-block" onclick="selectGraph('3k')">3k graph</button>
+                        <br>
+                        <ul>
+                            <li>3,000 most popular games</li>
+                            <li>~50k edges</li>
+                            <li><span class="text-success">contains most famous titles</span></li>
+                            <li><span class="text-success">gives better results</span></li>
+                            <li><span class="text-danger">needs more performance</span></li>
+                            <li><span class="text-danger">might lag quite a bit</span></li>
+                        </ul>
+                    </div>
+
+                </div>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+
+
 <script src="js/steamGraph.js"></script>
 </body>
 </html>

@@ -11,6 +11,8 @@ var currentMin = 0;
 
 var gameTitles = [];
 
+var selectedGraph = ""; // can be "1K" or "3K"
+
 var storage = window['localStorage'];
 
 $("#nodeInfos").hide();
@@ -36,22 +38,20 @@ function loadGameData() {
 }
 
 function saveGraph() {
-    $("#progress").text("saving...");
-    storage.setItem('nodes', JSON.stringify(nodes.get()));
+    $("#progress").text("saving "+selectedGraph+" graph ...");
+    storage.setItem(selectedGraph+'nodes', JSON.stringify(nodes.get()));
     // storage.setItem('edges', JSON.stringify(edges.get()));
-    $("#progress").text("saved. " + moment().calendar());
+    $("#progress").text("saved "+selectedGraph+" graph. " + moment().calendar());
 }
 
 function loadGraph() {
-    $("#progress").text("loading...");
-    var nodesTmp = JSON.parse(storage.getItem('nodes'));
-    // var edgesTmp = JSON.parse(storage.getItem('edges'));
+    $("#progress").text("loading "+selectedGraph+" graph ...");
+    var nodesTmp = JSON.parse(storage.getItem(selectedGraph+'nodes'));
 
     nodes = new vis.DataSet(nodesTmp);
-    // edges = new vis.DataSet(edgesTmp);
     network.setData({nodes: nodes, edges: edges});
 
-    $("#progress").text("loaded. " + moment().calendar());
+    $("#progress").text("loaded "+selectedGraph+" graph. " + moment().calendar());
 
     // var data = JSON.stringify(nodes.get());
     // var url = 'data:text/json;charset=utf8,' + encodeURIComponent(data);
@@ -134,7 +134,7 @@ var rating = 0;
 function rateGame(ratingTmp) {
     rating = ratingTmp;
     $("#isRated").show();
-    $('#updatingModal').modal({keyboard: false});
+    $('#updatingModal').modal({backdrop: 'static', keyboard: false});
 }
 
 function showTutorial() {
@@ -267,23 +267,27 @@ function initNetwork() {
     });
 }
 
-$.getJSON("data/steamNetWithPos3k.json", function (json) {
-    var nodesArray = json.nodes;
-    var edgesArray = json.edges;
-    console.log("nodes: " + nodesArray.length);
-    for (var i in edgesArray) {
-        edgesArray[i]["color"] = {color: '#555555', opacity: 0.3, highlight: '#ff0000'}
-    }
-    for (var i in nodesArray) {
-        nodesArray[i]["color"] = {background: 'white', border: 'black'};
-        nodesArray[i]['font'] = {size: 15, background: 'white', strokeWidth: 3};
-        nodesArray[i]['rated'] = false;
-    }
-//        console.log(nodesArray[0]);
-//        console.log(edgesArray[0]);
-    nodes = new vis.DataSet(nodesArray);
-    edges = new vis.DataSet(edgesArray);
-    initNetwork();
-    getGameList(nodesArray);
-});
+$('#graphSelect').modal({backdrop: 'static', keyboard: false});
+
+function selectGraph(nk) {
+    $('#graphSelect').modal('hide');
+    selectedGraph = nk;
+    $.getJSON("data/steamNetWithPos"+selectedGraph+".json", function (json) {
+        var nodesArray = json.nodes;
+        var edgesArray = json.edges;
+        console.log("nodes: " + nodesArray.length);
+        for (var i in edgesArray) {
+            edgesArray[i]["color"] = {color: '#555555', opacity: 0.3, highlight: '#ff0000'}
+        }
+        for (var i in nodesArray) {
+            nodesArray[i]["color"] = {background: 'white', border: 'black'};
+            nodesArray[i]['font'] = {size: 15, background: 'white', strokeWidth: 3};
+            nodesArray[i]['rated'] = false;
+        }
+        nodes = new vis.DataSet(nodesArray);
+        edges = new vis.DataSet(edgesArray);
+        initNetwork();
+        getGameList(nodesArray);
+    });
+}
 
