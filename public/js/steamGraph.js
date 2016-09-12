@@ -22,7 +22,7 @@ $('#loadingModal').modal();
 function loadGameData() {
     $("#nodeInfos h3 a").text(node.label);
     $("#nodeInfos h3 a").attr('href', node.link);
-    $("#steamrating").text(node.rating);
+    $("#steamrating").text(node.rating-5);
     $("#nodeInfos img").attr("src", "data/img/" + node.id + ".jpg");
     $("#currentRating").text(node.value);
     if (node.rated) {
@@ -87,7 +87,7 @@ function gettop10() {
 
     for (var i in topNodes) {
         $('#top10 > tbody:last-child').append(
-            '<tr><td>' + topNodes[i].label + '</td><td>' + topNodes[i].value + '</td><td>' + topNodes[i].rating + '/10</td></tr>'
+            '<tr><td>' + topNodes[i].label + '</td><td>' + topNodes[i].value + '</td><td>' + (topNodes[i].rating - 5) + '/5</td></tr>'
         );
     }
 
