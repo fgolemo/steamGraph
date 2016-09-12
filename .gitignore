@@ -22,6 +22,8 @@
 .idea/gradle.xml
 .idea/libraries
 
+.idea/
+
 # Mongo Explorer plugin:
 .idea/mongoSettings.xml
 
@@ -47,3 +49,5 @@ fabric.properties
 
 .gitignore
 steamScrapy2.pyc
+
+node_modules/
