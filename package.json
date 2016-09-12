@@ -1,5 +1,5 @@
 {
-  "name": "steamGraph",
+  "name": "steamgraph",
   "version": "0.1.0",
   "description": "If you don't know what to play next, check out SteamGraph.",
   "engines": {
@@ -10,19 +10,24 @@
     "start": "node index.js"
   },
   "dependencies": {
-    "finalhandler": "^0.5.0",
     "fs": "0.0.1-security",
+    "finalhandler": "~0.5.0",
     "http": "0.0.0",
     "path": "^0.12.7",
     "serve-static": "^1.11.1"
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/fgolemo/steamGraph"
+    "url": "git+https://github.com/fgolemo/steamGraph.git"
   },
   "keywords": [
     "node",
     "heroku"
   ],
-  "license": "MIT"
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/fgolemo/steamGraph/issues"
+  },
+  "homepage": "https://github.com/fgolemo/steamGraph#readme",
+  "author": "Florian Golemo <fgolemo@gmail.com>"
 }
