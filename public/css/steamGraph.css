@@ -1,6 +1,17 @@
+html, body, .container-fluid{
+    height: 100%;
+}
+.container-fluid .row:first-child  {
+    height:55%;
+}
+
+.container-fluid .row:first-child .col-xs-12 {
+    height:100%;
+}
+
 #mynetwork {
     /*width: 900px;*/
-    height: 600px;
+    height: 100%;
     border: 1px solid lightgray;
     background-color: #eeeeee;
 }
