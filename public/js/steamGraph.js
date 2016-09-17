@@ -22,7 +22,7 @@ $('#loadingModal').modal();
 function loadGameData() {
     $("#nodeInfos h3 a").text(node.label);
     $("#nodeInfos h3 a").attr('href', node.link);
-    $("#steamrating").text(node.rating-5);
+    $("#steamrating").text(node.rating - 5);
     $("#nodeInfos img").attr("src", "data/img/" + node.id + ".jpg");
     $("#currentRating").text(node.value);
     if (node.rated) {
@@ -38,20 +38,20 @@ function loadGameData() {
 }
 
 function saveGraph() {
-    $("#progress").text("saving "+selectedGraph+" graph ...");
-    storage.setItem(selectedGraph+'nodes', JSON.stringify(nodes.get()));
+    $("#progress").text("saving " + selectedGraph + " graph ...");
+    storage.setItem(selectedGraph + 'nodes', JSON.stringify(nodes.get()));
     // storage.setItem('edges', JSON.stringify(edges.get()));
-    $("#progress").text("saved "+selectedGraph+" graph. " + moment().calendar());
+    $("#progress").text("saved " + selectedGraph + " graph. " + moment().calendar());
 }
 
 function loadGraph() {
-    $("#progress").text("loading "+selectedGraph+" graph ...");
-    var nodesTmp = JSON.parse(storage.getItem(selectedGraph+'nodes'));
+    $("#progress").text("loading " + selectedGraph + " graph ...");
+    var nodesTmp = JSON.parse(storage.getItem(selectedGraph + 'nodes'));
 
     nodes = new vis.DataSet(nodesTmp);
     network.setData({nodes: nodes, edges: edges});
 
-    $("#progress").text("loaded "+selectedGraph+" graph. " + moment().calendar());
+    $("#progress").text("loaded " + selectedGraph + " graph. " + moment().calendar());
 
     // var data = JSON.stringify(nodes.get());
     // var url = 'data:text/json;charset=utf8,' + encodeURIComponent(data);
@@ -83,15 +83,20 @@ function gettop10() {
 
     });
     topNodes = topNodes.slice(0, 10);
+    $('.clickable-row').off('click');
     $('#top10 > tbody').empty();
+
 
     for (var i in topNodes) {
         $('#top10 > tbody:last-child').append(
-            '<tr><td>' + topNodes[i].label + '</td><td>' + topNodes[i].value + '</td><td>' + (topNodes[i].rating - 5) + '/5</td></tr>'
+            '<tr class="clickable-row" data-sid="' + topNodes[i].id + '"><td>' + topNodes[i].label + '</td><td>' + topNodes[i].value + '</td><td>' + (topNodes[i].rating - 5) + '/5</td></tr>'
         );
     }
-
+    $(".clickable-row").click(function () {
+        console.log($(this).data("sid"));
+    });
 }
+
 
 function hexFromRGBPercent(r, g, b) {
     var hex = [
@@ -276,7 +281,7 @@ $('#graphSelect').modal({backdrop: 'static', keyboard: false});
 function selectGraph(nk) {
     $('#graphSelect').modal('hide');
     selectedGraph = nk;
-    $.getJSON("data/steamNetWithPos"+selectedGraph+".json", function (json) {
+    $.getJSON("data/steamNetWithPos" + selectedGraph + ".json", function (json) {
         var nodesArray = json.nodes;
         var edgesArray = json.edges;
         console.log("nodes: " + nodesArray.length);
