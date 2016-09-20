@@ -61,6 +61,7 @@ function loadGraph() {
 }
 
 function gettop10() {
+    top10closePops();
     var topNodes = nodes.get({
         order: function (a, b) {
             if (a.value > b.value) {
@@ -78,7 +79,7 @@ function gettop10() {
             }
         },
         filter: function (item) {
-            return (item.rated === false);
+            return (item.rated === false && item.top10 === true);
         }
 
     });
@@ -93,9 +94,9 @@ function gettop10() {
         );
     }
     $(".clickable-row").click(function () {
-
+        top10closePops();
         var sid = $(this).data("sid");
-
+        $(this).addClass("has-popover");
         $(this).popover({
             container: 'body',
             html: true,
@@ -108,6 +109,10 @@ function gettop10() {
     });
 }
 
+function top10closePops() {
+    $(".has-popover").popover('destroy');
+}
+
 function top10open(sid) {
     top10cancel(sid);
     moveToElement(sid, null);
@@ -118,11 +123,14 @@ function top10wishlist(sid) {
 }
 
 function top10remove(sid) {
-
+    nodes.update({id: sid, top10: false});
+    top10cancel(sid);
+    gettop10();
 }
 
 function top10cancel(sid) {
     var item = $('tr[data-sid="' + sid + '"]');
+    item.removeClass("has-popover");
     item.popover('destroy');
 }
 
@@ -333,6 +341,7 @@ function selectGraph(nk) {
             nodesArray[i]["color"] = {background: 'white', border: 'black'};
             nodesArray[i]['font'] = {size: 15, background: 'white', strokeWidth: 3};
             nodesArray[i]['rated'] = false;
+            nodesArray[i]['top10'] = true;
         }
         nodes = new vis.DataSet(nodesArray);
         edges = new vis.DataSet(edgesArray);
