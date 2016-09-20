@@ -44,7 +44,7 @@ html, body, .container-fluid {
     margin-top: 10px;
 }
 
-tr.clickableRow {
+tr.clickable-row {
     cursor: pointer;
 }
 

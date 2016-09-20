@@ -93,10 +93,38 @@ function gettop10() {
         );
     }
     $(".clickable-row").click(function () {
-        console.log($(this).data("sid"));
+
+        var sid = $(this).data("sid");
+
+        $(this).popover({
+            container: 'body',
+            html: true,
+            placement: 'auto',
+            content: '<button class="btn btn-sm btn-primary btn-block" onclick="top10open(' + sid + ')">open in graph</button> ' +
+            '<button class="btn btn-sm btn-success btn-block" onclick="top10wishlist(' + sid + ')">move to wishlist</button> ' +
+            '<button class="btn btn-sm btn-danger btn-block" onclick="top10remove(' + sid + ')">remove from top10</button> ' +
+            '<button class="btn btn-sm btn-default btn-block" onclick="top10cancel(' + sid + ')">&times;</button>'
+        }).popover('show');
     });
 }
 
+function top10open(sid) {
+    top10cancel(sid);
+    moveToElement(sid, null);
+}
+
+function top10wishlist(sid) {
+
+}
+
+function top10remove(sid) {
+
+}
+
+function top10cancel(sid) {
+    var item = $('tr[data-sid="' + sid + '"]');
+    item.popover('destroy');
+}
 
 function hexFromRGBPercent(r, g, b) {
     var hex = [
@@ -150,6 +178,43 @@ function showCredits() {
     $('#credits').modal();
 }
 
+function moveToElement(id, label) {
+    var selectedNodes;
+    if (label) { //
+        selectedNodes = nodes.get({
+            filter: function (item) {
+                return (item.label == label);
+            }
+        });
+    } else {
+        selectedNodes = nodes.get({
+            filter: function (item) {
+                return (item.id == id); //TODO: we can do this simpler
+            }
+        });
+    }
+    var scale = network.getScale();
+    if (scale < 0.5) {
+        scale = 0.5;
+    }
+    network.setSelection({
+        nodes: [selectedNodes[0].id]
+    }, {
+        unselectAll: true,
+        highlightEdges: true
+    });
+    network.moveTo({
+        position: {x: selectedNodes[0].x, y: selectedNodes[0].y},
+        scale: scale,
+        animation: {
+            duration: 300
+        }
+    });
+    var selEdges = network.getSelectedEdges();
+    //console.log(selEdges);
+    selectNode(selectedNodes[0].id, selEdges);
+}
+
 function getGameList(nodesArray) {
     gameTitles = [];
     for (var i in nodesArray) {
@@ -162,31 +227,7 @@ function getGameList(nodesArray) {
     Awesomplete.$.bind(input, {
         "awesomplete-selectcomplete": function (evt) {
             console.log(evt.text);
-            var selectedNodes = nodes.get({
-                filter: function (item) {
-                    return (item.label == evt.text.value);
-                }
-            });
-            var scale = network.getScale();
-            if (scale < 0.5) {
-                scale = 0.5;
-            }
-            network.setSelection({
-                nodes: [selectedNodes[0].id]
-            }, {
-                unselectAll: true,
-                highlightEdges: true
-            });
-            network.moveTo({
-                position: {x: selectedNodes[0].x, y: selectedNodes[0].y},
-                scale: scale,
-                animation: {
-                    duration: 300
-                }
-            });
-            var selEdges = network.getSelectedEdges();
-            console.log(selEdges);
-            selectNode(selectedNodes[0].id, selEdges);
+            moveToElement(null, evt.text.value);
         }
     });
 }
