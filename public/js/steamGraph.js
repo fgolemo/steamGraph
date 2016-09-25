@@ -36,16 +36,23 @@ function loadGameData() {
 }
 
 function saveGraph() {
+    $("#progress").text("compressing " + selectedGraph + " graph ...");
+    var graphString = JSON.stringify(nodes.get());
+    var cGraphString = LZString.compressToUTF16(graphString);
     $("#progress").text("saving " + selectedGraph + " graph ...");
-    storage.setItem(selectedGraph + 'nodes', JSON.stringify(nodes.get()));
-    // storage.setItem('edges', JSON.stringify(edges.get()));
+
+
+    storage.setItem(selectedGraph + 'nodes', cGraphString);
     $("#progress").text("saved " + selectedGraph + " graph. " + moment().calendar());
 }
 
 function loadGraph() {
-    $("#progress").text("loading " + selectedGraph + " graph ...");
-    var nodesTmp = JSON.parse(storage.getItem(selectedGraph + 'nodes'));
+    $("#progress").text("decompressing " + selectedGraph + " graph ...");
+    var cGraphString = storage.getItem(selectedGraph + 'nodes');
+    var graphString = LZString.decompressFromUTF16(cGraphString);
+    var nodesTmp = JSON.parse(graphString);
 
+    $("#progress").text("loading " + selectedGraph + " graph ...");
     nodes = new vis.DataSet(nodesTmp);
     network.setData({nodes: nodes, edges: edges});
 
