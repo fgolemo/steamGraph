@@ -15,12 +15,12 @@ steamGraph TODO
 # add donate link
 # add graph size selector on load
 # create 1k version of graph
-- put app online
+# put app online
 
 Bonus:
 # get game tags and display in info box
 # search bar
-- allow interaction with top10
-	- allow clicking an element to select it in the graph
+# allow interaction with top10
+	# allow clicking an element to select it in the graph
 - offer edges/nodes for download
 
