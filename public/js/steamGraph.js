@@ -231,6 +231,16 @@ function showWishlist() {
     $('#wishlist').modal();
 }
 
+function updateOnWishlist(sid, newValue) {
+    console.log(wishlist);
+    for (var i in wishlist) {
+
+        if (wishlist[i].id == sid) {
+            wishlist[i].value = newValue;
+        }
+    }
+}
+
 function makeGameTags(tags) {
     var output = "";
     for (var t in tags) {
@@ -314,6 +324,8 @@ $('#updatingModal').on('shown.bs.modal', function (e) {
     // and I don't want that right away. I only wanna redraw after I updated all the related nodes
     updates.push({id: node.id, value: newRating, color: newColor, rated: true});
 
+    updateOnWishlist(node.id, newRating);
+
     for (var e in currentEdges) {
         var edge = edges.get(currentEdges[e]);
         var otherNode;
@@ -337,6 +349,7 @@ $('#updatingModal').on('shown.bs.modal', function (e) {
             var newColor = {background: ratingToHex(otherRating), border: 'black'};
             updates.push({id: otherNode.id, value: otherRating, color: newColor});
         }
+        updateOnWishlist(otherNode.id, otherRating);
 
     }
     nodes.update(updates);
