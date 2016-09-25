@@ -4,7 +4,10 @@ from tqdm import tqdm
 nodes = []
 sids = []
 
-with open('data/steamNet1k.json') as data_file:
+preset = "1k"
+gamesToGet = {"1k": 1000, "3k": 3000}
+
+with open('../public/data/steamNet'+preset+'.json') as data_file:
     data = json.load(data_file)
     for item in tqdm(data['nodes']):
         sid = item["id"]
@@ -25,5 +28,5 @@ with open('data/steamNet1k.json') as data_file:
             edges.append(str(otherSid))
         nodes.append(str(sid)+";"+";".join(edges))
 
-with open('data/steamNet1k.csv', 'w') as f:
+with open('../public/data/steamNet'+preset+'.csv', 'w') as f:
     f.write("\n".join(nodes))

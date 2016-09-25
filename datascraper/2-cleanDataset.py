@@ -13,7 +13,11 @@ software = 0
 total = 0
 lowRating = 0
 
-with open('data/steamGraph6k3.json') as data_file:
+preset = "3k"
+gamesToGet = {"1k": 1000, "3k": 3000}
+
+
+with open('../public/data/steamGraph6k3-160925.json') as data_file:
     data = json.load(data_file)
     data = sorted(data, key=lambda k: k['players'], reverse=True)
     count = 0
@@ -32,7 +36,7 @@ with open('data/steamGraph6k3.json') as data_file:
         if item["players"] < 100: # this is for the 3K graph
             lowRating +=1
             continue
-        if count == 999:
+        if count == gamesToGet[preset]:
             break
         count += 1
 
@@ -91,7 +95,7 @@ for e in edges:
     if e['to'] in sids and e['from'] in sids:
         edgesClean.append(e)
 
-with open('data/steamNet1k.json', 'w') as f:
+with open('../public/data/steamNet'+preset+'.json', 'w') as f:
      json.dump({'nodes': nodes, 'edges': edgesClean}, f)
 #
 
