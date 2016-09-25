@@ -19,11 +19,16 @@ $("#nodeInfos").hide();
 
 $('#loadingModal').modal();
 
+function getImgString(sid) {
+    return "http://cdn.akamai.steamstatic.com/steam/apps/"+sid+"/capsule_184x69.jpg";
+}
+
 function loadGameData() {
     $("#nodeInfos h3 a").text(node.label);
     $("#nodeInfos h3 a").attr('href', node.link);
     $("#steamrating").text(node.rating - 5);
-    $("#nodeInfos img").attr("src", "data/img/" + node.id + ".jpg");
+    $("#nodeInfos img").attr("src", getImgString(node.id));
+    //$("#nodeInfos img").attr("src", "data/img/" + node.id + ".jpg");
     $("#currentRating").text(node.value);
     if (node.rated) {
         $("#isRated").show();
@@ -204,7 +209,7 @@ function showWishlist() {
                 '<li class="media">' +
                 '<div class="media-left">' +
                 '<a href="' + game.link + '" target="_blank">' +
-                '<img class="media-object" src="data/img/' + game.id + '.jpg">' +
+                '<img class="media-object" src="'+getImgString(game.id)+'">' +
                 '</a>' +
                 '</div>' +
                 '<div class="media-body">' +
