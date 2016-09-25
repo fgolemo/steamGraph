@@ -10,7 +10,7 @@ var currentMax = 0;
 var currentMin = 0;
 
 var gameTitles = [];
-
+var wishlist = [];
 var selectedGraph = ""; // can be "1K" or "3K"
 
 var storage = window['localStorage'];
@@ -31,10 +31,8 @@ function loadGameData() {
         $("#isRated").hide();
     }
     $('#tags').empty();
-    for (var t in node.tags.slice(0, 3))
-        $('#tags:last-child').append(
-            '<span class="label label-default">' + node.tags[t] + '</span>&nbsp;'
-        );
+    var tags = makeGameTags(node.tags.slice(0, 3));
+    $('#tags:last-child').append(tags);
 }
 
 function saveGraph() {
@@ -119,7 +117,9 @@ function top10open(sid) {
 }
 
 function top10wishlist(sid) {
-
+    var game = nodes.get(sid);
+    wishlist.push(game);
+    top10remove(sid);
 }
 
 function top10remove(sid) {
@@ -184,6 +184,48 @@ function showTutorial() {
 
 function showCredits() {
     $('#credits').modal();
+}
+
+function showWishlist() {
+    if (wishlist.length > 0) {
+        $("#empty-wishlist").hide();
+        $('#wishlist ul.media-list').empty();
+        for (var i in wishlist) {
+            var game = wishlist[i];
+            var tags = makeGameTags(game.tags.slice(0, 4));
+            $('#wishlist ul.media-list:last-child').append(
+                '<li class="media">' +
+                '<div class="media-left">' +
+                '<a href="' + game.link + '" target="_blank">' +
+                '<img class="media-object" src="data/img/' + game.id + '.jpg">' +
+                '</a>' +
+                '</div>' +
+                '<div class="media-body">' +
+                '<a href="' + game.link + '" target="_blank">' +
+                '<h4 class="media-heading">' + game.label + '</h4>' +
+                '</a>' +
+                '<span class="wishlist-value">Graph rating: <strong>' + game.value + '</strong></span>&nbsp;&nbsp;&nbsp;' +
+                '<span class="wishlist-rating">Steam rating: ' + (game.rating - 5) + '/5</span><br>' +
+                'Tags: ' + tags +
+                '</div>' +
+                '</li>'
+            );
+        }
+    } else {
+
+    }
+
+
+    $('#wishlist').modal();
+}
+
+function makeGameTags(tags) {
+    var output = "";
+    for (var t in tags) {
+
+        output += '<span class="label label-default">' + tags[t] + '</span>&nbsp;';
+    }
+    return output;
 }
 
 function moveToElement(id, label) {

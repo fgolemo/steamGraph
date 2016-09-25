@@ -30,7 +30,7 @@
                 <h4>please click on a node in the network to get started</h4>
             </div>
             <div id="nodeInfos">
-                <h3><a href="#" target="_blank">gamenam</a></h3>
+                <h3><a href="#" target="_blank">game name</a></h3>
                 <img src="data/img/10.jpg"/><br>
                 <span>Steam overall rating: <span id="steamrating">0</span>/5</span><br>
                 <span>
@@ -69,9 +69,12 @@
             </div>
             <br>
             <span id="progress"></span>
-            <br>
+            <h3>
+                misc
+            </h3>
             <button onclick="showTutorial()" class="btn btn-primary">tutorial</button>
             <button onclick="showCredits()" class="btn btn-primary">credits</button>
+            <button onclick="showWishlist()" class="btn btn-primary">wishlist</button>
         </div>
         <div class="col-xs-3" class="center-block">
             <h3>
@@ -94,12 +97,12 @@
                 </tr>
                 </thead>
                 <tbody>
-                    <!--<div class="list-group">-->
-  <!--<a href="#" class="list-group-item active">-->
-    <!--<h4 class="list-group-item-heading">List group item heading</h4>-->
-    <!--<p class="list-group-item-text">...</p>-->
-  <!--</a>-->
-<!--</div>-->
+                <!--<div class="list-group">-->
+                <!--<a href="#" class="list-group-item active">-->
+                <!--<h4 class="list-group-item-heading">List group item heading</h4>-->
+                <!--<p class="list-group-item-text">...</p>-->
+                <!--</a>-->
+                <!--</div>-->
                 </tbody>
             </table>
         </div>
@@ -175,6 +178,35 @@
     </div><!-- /.modal-dialog -->
 </div><!-- /.modal -->
 
+<div class="modal fade" tabindex="-1" role="dialog" id="wishlist">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                        aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title">Your wishlist</h4>
+            </div>
+            <div class="modal-body">
+                <p id="empty-wishlist">
+                    <strong>Nothing here yet.
+                        To add games to your wishlist, calculate your top10 (button on the right),
+                        click on a game in the top10, and then click "move to wishlist"</strong>
+                    <br>
+                    This list is here so you can get new recommendations and
+                    don't see the same games over and over in the top10.
+                </p>
+                <ul class="media-list">
+
+
+                </ul>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" data-dismiss="modal">Sweet</button>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+
 <div class="modal fade" tabindex="-1" role="dialog" id="graphSelect">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
@@ -227,9 +259,10 @@
             <div class="modal-body">
                 <p>
                     This software was made by Florian Golemo.<br>
-                    Visit my <a href="https://github.com/fgolemo/steamGraph" target="_blank" class="btn btn-success btn-sm">
+                    Visit my <a href="https://github.com/fgolemo/steamGraph" target="_blank"
+                                class="btn btn-success btn-sm">
                     Github repo for this project
-                    </a> or send me a mail:
+                </a> or send me a mail:
                     <span class="spamspan">
                         <span class="u">fgolemo+stgr</span>
                         [at]
@@ -248,20 +281,30 @@
                 <br>
                 This app was made with and only thanks to:
                 <ul>
-                    <li><a href="http://store.steampowered.com/" target="_blank">Steam</a>, of course, providing all the game data</li>
+                    <li><a href="http://store.steampowered.com/" target="_blank">Steam</a>, of course, providing all the
+                        game data
+                    </li>
                     <li><a href="https://steamdb.info/" target="_blank">SteamDB</a>, who provided the player counts,
                         based on which the original over 6,000 steam games were filtered into the 1k and 3k graph
                     </li>
-                    <li><a href="http://visjs.org/" target="_blank">Vis.js</a>, which is the awesome JavaScript library for drawing the giant graph</li>
-                    <li><a href="http://getbootstrap.com/" target="_blank">Bootstrap</a>, for the visual style of buttons, text, table, etc.</li>
-                    <li><a href="https://leaverou.github.io/awesomplete/" target="_blank">awesomplete</a>, for the sweet search box autocomplete</li>
+                    <li><a href="http://visjs.org/" target="_blank">Vis.js</a>, which is the awesome JavaScript library
+                        for drawing the giant graph
+                    </li>
+                    <li><a href="http://getbootstrap.com/" target="_blank">Bootstrap</a>, for the visual style of
+                        buttons, text, table, etc.
+                    </li>
+                    <li><a href="https://leaverou.github.io/awesomplete/" target="_blank">awesomplete</a>, for the sweet
+                        search box autocomplete
+                    </li>
                     <li><a href="https://jquery.com/" target="_blank">jQuery</a>,
                         <a href="http://momentjs.com/" target="_blank">moment.js</a>, and
                         <a href="http://www.spamspan.com/" target="_blank">spamspan</a>,
                         for JavaScript goodies
                     </li>
                     <li><a href="https://scrapy.org/" target="_blank">Scrapy</a>, for scraping the data with Python</li>
-                    <li><a href="https://www.jetbrains.com/pycharm/" target="_blank">PyCharm</a>, for all the help with the coding and formatting.</li>
+                    <li><a href="https://www.jetbrains.com/pycharm/" target="_blank">PyCharm</a>, for all the help with
+                        the coding and formatting.
+                    </li>
 
                 </ul>
             </div>
