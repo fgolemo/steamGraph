@@ -77,6 +77,7 @@ class SteampoweredComSpider(CrawlSpider):
 
         badJSON = badJSON.replace("'", '|||')
         badJSON = badJSON.replace('"name"', "'name'")
+        badJSON = badJSON.replace('"url_name"', "'url_name'")
         badJSON = badJSON.replace('"discount_block"', "'discount_block'")
         badJSON = badJSON.replace('"discount"', "'discount'")
         badJSON = badJSON.replace('"os_windows"', "'os_windows'")
@@ -88,6 +89,12 @@ class SteampoweredComSpider(CrawlSpider):
         badJSON = badJSON.replace('"early_access"', "'early_access'")
         badJSON = badJSON.replace('"software"', "'software'")
         badJSON = badJSON.replace('"video"', "'video'")
+        badJSON = badJSON.replace('"status_string"', "'status_string'")
+        badJSON = badJSON.replace('"tiny_capsule"', "'tiny_capsule'")
+        badJSON = badJSON.replace('"appids"', "'appids'")
+        badJSON = badJSON.replace('"has_adult_content_violence"', "'has_adult_content_violence'")
+        badJSON = badJSON.replace('"has_adult_content_sex"', "'has_adult_content_sex'")
+        badJSON = badJSON.replace('"vr_razerosvr"', "'vr_razerosvr'")
         badJSON = badJSON.replace('"vr_htcvive"', "'vr_htcvive'")
         badJSON = badJSON.replace('"vr_oculusrift"', "'vr_oculusrift'")
         badJSON = badJSON.replace('"virtual_reality"', "'virtual_reality'")
@@ -100,6 +107,8 @@ class SteampoweredComSpider(CrawlSpider):
         badJSON = badJSON.replace(r"\'", r'\"')
         badJSON = badJSON.replace(r"'", r'"')
         badJSON = badJSON.replace("|||", "'")
+
+        badJSON = badJSON.replace(r'\"},"', '"},"') # hack to prevent status text bug
 
         return badJSON
 
@@ -137,14 +146,20 @@ class SteampoweredComSpider(CrawlSpider):
         tags = response.css('a.app_tag::text').extract()
         i['tags'] = [t.strip() for t in tags]
 
-        pattern = re.compile(r'GStoreItemData.AddStoreItemData\(\W+\{(.+?)\,"localized":true\}\}\W*?\);', re.MULTILINE | re.DOTALL)
+        pattern = re.compile(r'GStoreItemData.AddStoreItemData\(\W+\{(.+?)\,"localized":true[A-Za-z0-9":_,!]*\}\}\W*?\);', re.MULTILINE | re.DOTALL)
+        state = 0
         try:
             locations1 = '{'+response.xpath('//script[contains(., "GStoreItemData.AddStoreItemData")]/text()').re(pattern)[0]+',"localized":true}}'
+            state = 1
             locations2 = locations1.split('\n')
+            state = 2
             locations3 = locations2[0]
+            state = 3
             if len(locations2) > 1:
                 locations3 = locations3[:-2]
+                state = 4
             locations4 = self.normalizJSON(locations3)
+            state = 5
             try:
                 locations = json.loads(locations4)
                 i['related'] = locations.keys()
@@ -160,10 +175,12 @@ class SteampoweredComSpider(CrawlSpider):
             # print ("\n\n")
             # print (locations.keys())
             # print ("\n\n")
-        except IndexError:
+        except IndexError, e:
             print "\n\nfail\n\n"
             print response.xpath('//script[contains(., "GStoreItemData.AddStoreItemData")]/text()').extract_first()
             i['related'] = []
+            print "state: {}".format(state)
+            print e
 
         if len(i["related"]) == 0:
             return

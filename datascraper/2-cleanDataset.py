@@ -1,4 +1,6 @@
 import json
+from time import strftime
+
 from tqdm import tqdm
 
 nodes = []
@@ -13,11 +15,11 @@ software = 0
 total = 0
 lowRating = 0
 
-preset = "3k"
+preset = "1k"
 gamesToGet = {"1k": 1000, "3k": 3000}
 
 
-with open('../public/data/steamGraph6k3-160925.json') as data_file:
+with open('../public/data/steamGraph6k3-170629.json') as data_file:
     data = json.load(data_file)
     data = sorted(data, key=lambda k: k['players'], reverse=True)
     count = 0
@@ -95,7 +97,7 @@ for e in edges:
     if e['to'] in sids and e['from'] in sids:
         edgesClean.append(e)
 
-with open('../public/data/steamNet'+preset+'.json', 'w') as f:
+with open('../public/data/steamNet'+preset+"-"+strftime("%y%m%d")+'.json', 'w') as f:
      json.dump({'nodes': nodes, 'edges': edgesClean}, f)
 #
 
