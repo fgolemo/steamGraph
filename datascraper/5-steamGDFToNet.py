@@ -3,7 +3,7 @@ from tqdm import tqdm
 
 nodes = []
 
-preset = "3k"
+preset = "1k"
 sampledate = "170629"
 gamesToGet = {"1k": 1000, "3k": 3000}
 
